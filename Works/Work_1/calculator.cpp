@@ -1,4 +1,4 @@
-#include "Calculator.hpp"
+#include "calculator.hpp"
 
 void Calculator::parser(std::string expr, Node* ptr){
     int op_index = 0;

@@ -12,7 +12,13 @@ void Calculator::parser(std::string expr, Node* ptr) {
     int op_index = find_op_index(expr, ptr);
     // [1*2+6-3/7]
     ptr = new Node;
-    ptr->op = expr[op_index];
+
+    if(op_index == -1) {
+        ptr -> value = std::stoi(expr);
+    }
+    else {
+        ptr->op = expr[op_index];
+    }
 
     auto left = expr.substr(0, op_index);
     auto right = expr.substr(op_index + 1, expr.length() - op_index - 1);
@@ -22,7 +28,7 @@ void Calculator::parser(std::string expr, Node* ptr) {
 }
 
 int Calculator::find_op_index(std::string expr, Node *ptr) {
-    int op_index = 0;
+    int op_index = -1;
     int brackets_level = 0;
 
     for(int i = 0; i < expr.length(); ++i){
@@ -49,10 +55,52 @@ int Calculator::find_op_index(std::string expr, Node *ptr) {
     return op_index;
 }
 
+void Calculator::calculate_expr(Node *ptr) {
+    if (ptr -> left) {
+        if(ptr -> left -> op) {
+            calculate_expr(ptr -> left);
+        }
+    }
+
+    if (ptr -> right) {
+        if(ptr -> right -> op) {
+            calculate_expr(ptr -> right);
+        }
+    }
+
+    ptr -> value = compute_value(ptr->left->value, ptr->right->value, ptr->op);
+    ptr ->op = NULL;
+
+}
+
+int Calculator::compute_value(int left_value, int right_value, char op) {
+    int result = 0;
+    switch (op) {
+        case '+':
+            result = left_value + right_value;
+        break;
+        case '-':
+            result = left_value - right_value;
+        break;
+        case '*':
+            result = left_value * right_value;
+        break;
+        case '/':
+            result = left_value / right_value;
+        break;
+        default:
+            result = -1;
+    }
+
+    return result;
+}
+
 double Calculator::calculate(std::string expr) {
     expr = erase_remove_spaces(expr);
     parser(expr, head);
-    return 0.0;
+
+    calculate_expr(head);
+    return head->value;
 }
 
 

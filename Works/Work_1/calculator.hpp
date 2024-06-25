@@ -7,7 +7,7 @@ class Calculator{
 private:
     class Node{
         public:    
-            int value;
+            double value;
             char op = NULL;
             Node* left  = nullptr;
             Node* right = nullptr;
@@ -22,7 +22,7 @@ private:
     bool is_div_or_mul(const char& c);
     int find_op_index(std::string expr, Node* ptr);
     void calculate_expr(Node* ptr);
-    int compute_value(int left_value, int right_value, char op);
+    double compute_value(double left_value, double right_value, char op);
 
 public:
     Calculator(){}

@@ -11,10 +11,10 @@ void Calculator::parser(std::string expr, Node* ptr) {
 
     int op_index = find_op_index(expr, ptr);
     // [1*2+6-3/7]
-    ptr = new Node;
 
     if(op_index == -1) {
         ptr -> value = std::stoi(expr);
+        return;
     }
     else {
         ptr->op = expr[op_index];
@@ -23,7 +23,11 @@ void Calculator::parser(std::string expr, Node* ptr) {
     auto left = expr.substr(0, op_index);
     auto right = expr.substr(op_index + 1, expr.length() - op_index - 1);
 
+
+    ptr -> left = new Node;
     parser(left, ptr->left);
+
+    ptr -> right = new Node;
     parser(right, ptr->right);
 }
 
@@ -73,8 +77,8 @@ void Calculator::calculate_expr(Node *ptr) {
 
 }
 
-int Calculator::compute_value(int left_value, int right_value, char op) {
-    int result = 0;
+double Calculator::compute_value(double left_value, double right_value, char op) {
+    double result = 0;
     switch (op) {
         case '+':
             result = left_value + right_value;
@@ -97,6 +101,7 @@ int Calculator::compute_value(int left_value, int right_value, char op) {
 
 double Calculator::calculate(std::string expr) {
     expr = erase_remove_spaces(expr);
+    head = new Node;
     parser(expr, head);
 
     calculate_expr(head);
